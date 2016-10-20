@@ -16,11 +16,13 @@ if (is_readable($cryptCertFileName)) {
         echo 'Could not open encrypt private key: ', $cryptCertFileName, PHP_EOL;
         die();
     }
+
+    echo 'Opened ', $cryptCertFileName, PHP_EOL;
 } else {
     $cryptKeyResource = openssl_pkey_new([
         'digest_alg'       => 'sha512',
         'private_key_bits' => 4096,
-        'private_key_type' => OPENSSL_KEYTYPE_EC,
+        'private_key_type' => OPENSSL_KEYTYPE_RSA,
     ]);
 
     if (false === $cryptKeyResource) {
@@ -29,6 +31,7 @@ if (is_readable($cryptCertFileName)) {
     }
 
     openssl_pkey_export_to_file($cryptKeyResource, $cryptCertFileName);
+    echo 'New crypt private key was saved to ', $cryptCertFileName, PHP_EOL;
 }
 
 
@@ -39,6 +42,8 @@ if (is_readable($signCertFileName)) {
         echo 'Could not open signature private key: ', $signCertFileName, PHP_EOL;
         die();
     }
+
+    echo 'Opened ', $signCertFileName, PHP_EOL;
 } else {
     $signKeyResource = openssl_pkey_new([
         'digest_alg'       => 'sha256',
@@ -51,7 +56,8 @@ if (is_readable($signCertFileName)) {
         die();
     }
 
-    openssl_pkey_export_to_file($cryptKeyResource, $cryptCertFileName);
+    openssl_pkey_export_to_file($signKeyResource, $signCertFileName);
+    echo 'New sign private key was saved to ', $signCertFileName, PHP_EOL;
 }
 
 $cryptPublicKeyInfo = openssl_pkey_get_details($cryptKeyResource);
