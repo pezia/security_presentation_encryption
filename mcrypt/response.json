@@ -1,0 +1,9 @@
+{
+  "status": "OK",
+  "error": null,
+  "message": null,
+  "data": {
+    "foo": "bar"
+    "baz": true
+  }
+}
