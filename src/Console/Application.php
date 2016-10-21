@@ -3,7 +3,12 @@
 namespace Marble\Presentations\Security\Console;
 
 use Marble\Presentations\Security\Command\Mac\HMac;
+use Marble\Presentations\Security\Command\Mcrypt\CbcRandomIv;
+use Marble\Presentations\Security\Command\Mcrypt\CbcStaticIv;
 use Marble\Presentations\Security\Command\Mcrypt\Ecb;
+use Marble\Presentations\Security\Command\Mcrypt\OfbRandomIv;
+use Marble\Presentations\Security\Command\Mcrypt\OfbReusedIv;
+use Marble\Presentations\Security\Command\Mcrypt\OfbStaticIv;
 use Marble\Presentations\Security\Command\Mcrypt\ZeroPadding;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,5 +43,10 @@ class Application extends BaseApplication
         $this->add(new HMac());
         $this->add(new ZeroPadding());
         $this->add(new Ecb());
+        $this->add(new CbcStaticIv());
+        $this->add(new CbcRandomIv());
+        $this->add(new OfbStaticIv());
+        $this->add(new OfbRandomIv());
+        $this->add(new OfbReusedIv());
     }
 }

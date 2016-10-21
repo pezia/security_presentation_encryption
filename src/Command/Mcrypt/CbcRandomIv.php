@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class Ecb extends McryptCommandAbstract
+class CbcRandomIv extends McryptCommandAbstract
 {
     /**
      * @inheritdoc
@@ -17,10 +17,10 @@ class Ecb extends McryptCommandAbstract
         parent::configure();
 
         $this
-            ->setName('mcrypt:ecb')
+            ->setName('mcrypt:cbc-random-iv')
             ->addOption(self::OPTION_CIPHER, 'c', InputOption::VALUE_OPTIONAL, 'Block cipher used for encryption', MCRYPT_RIJNDAEL_256)
             ->addOption(self::OPTION_KEY, self::OPTION_KEY, InputOption::VALUE_OPTIONAL, 'The secret key', 'my too short Key')
-            ->setDescription('This example shows that with ECB mode you will get the same ciphertext block for the same plaintext block.');
+            ->setDescription('This example shows that with CBC mode you will get the same ciphertext for the same plaintext until the first difference if you use the same IV.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -29,20 +29,21 @@ class Ecb extends McryptCommandAbstract
 
         $cipher    = $input->getOption(self::OPTION_CIPHER);
         $key       = $input->getOption(self::OPTION_KEY);
-        $mode      = MCRYPT_MODE_ECB;
+        $mode      = MCRYPT_MODE_CBC;
         $blockSize = $this->getBlockSize($cipher, $mode);
+        $message   = 'Foo bar';
 
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);
         $io->writeln('Block size:        ' . $blockSize);
 
-        $io->warning('Be aware of the fact, that only the block that contains the counter has a different ciphertext');
-
         for ($i = 0; $i < 3; $i++) {
-            $message = $this->getMessage($i);
+            $iv = $this->generateIv($cipher, $mode);
 
-            $cipherText = mcrypt_encrypt($cipher, $key, $message, $mode);
+            $cipherText = mcrypt_encrypt($cipher, $key, $message, $mode, $iv);
 
+            $io->newLine();
+            $io->writeln('IV: ' . bin2hex($iv));
             $io->writeln($this->chunkText(bin2hex($cipherText), $blockSize));
         }
 

@@ -2,13 +2,12 @@
 
 namespace Marble\Presentations\Security\Command\Mcrypt;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ZeroPadding extends McryptCommandAbstract
+class OfbStaticIv extends McryptCommandAbstract
 {
     /**
      * @inheritdoc
@@ -18,12 +17,10 @@ class ZeroPadding extends McryptCommandAbstract
         parent::configure();
 
         $this
-            ->setName('mcrypt:zero-padding')
+            ->setName('mcrypt:ofb-static-iv')
             ->addOption(self::OPTION_CIPHER, 'c', InputOption::VALUE_OPTIONAL, 'Block cipher used for encryption', MCRYPT_RIJNDAEL_256)
-            ->addOption(self::OPTION_MODE, 'm', InputOption::VALUE_OPTIONAL, 'Block cipher mode used for encryption', MCRYPT_MODE_ECB)
             ->addOption(self::OPTION_KEY, self::OPTION_KEY, InputOption::VALUE_OPTIONAL, 'The secret key', 'my too short Key')
-            ->addArgument(self::ARGUMENT_MESSAGE, InputArgument::OPTIONAL, 'The message to encrypt', 'Foo')
-            ->setDescription('An example that shows the padding scheme of MCrypt.');
+            ->setDescription('This example shows that with OFB mode you will get the same ciphertext for the same plaintext if you use the same IV.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,28 +28,24 @@ class ZeroPadding extends McryptCommandAbstract
         $io = new SymfonyStyle($input, $output);
 
         $cipher    = $input->getOption(self::OPTION_CIPHER);
-        $mode      = $input->getOption(self::OPTION_MODE);
         $key       = $input->getOption(self::OPTION_KEY);
-        $message   = $input->getArgument(self::ARGUMENT_MESSAGE);
+        $mode      = MCRYPT_MODE_OFB;
         $blockSize = $this->getBlockSize($cipher, $mode);
         $iv        = $this->generateIv($cipher, $mode);
 
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);
         $io->writeln('Block size:        ' . $blockSize);
-        $io->writeln('Plaintext length:  ' . strlen($message));
 
-        $cipherText = mcrypt_encrypt($cipher, $key, $message, $mode, $iv);
+        $io->warning('Since the key stream is always the same, due to the XOR only at the counter is the ciphertext different (in the middle of the 4th block)');
 
-        $io->writeln('Cipher length:     ' . strlen($cipherText));
-        $io->writeln('Cipher text:       ' . bin2hex($cipherText));
+        for ($i = 0; $i < 3; $i++) {
+            $message = $this->getMessage($i);
 
-        $decoded = mcrypt_decrypt($cipher, $key, $cipherText, $mode);
+            $cipherText = mcrypt_encrypt($cipher, $key, $message, $mode, $iv);
 
-        $io->writeln('Decoded:           ' . bin2hex($decoded));
-        $io->writeln('Trimmed:           ' . bin2hex(trim($decoded)));
-        $io->writeln('Decoded Plaintext: ' . trim($decoded));
-
+            $io->writeln($this->chunkText(bin2hex($cipherText), $blockSize));
+        }
 
         return 0;
     }

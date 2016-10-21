@@ -44,4 +44,36 @@ class McryptCommandAbstract extends Command
 
         return implode(' - ', $chunks);
     }
+
+
+    /**
+     * @param string $cipher
+     * @param string $mode
+     *
+     * @return string
+     */
+    protected function generateIv($cipher, $mode)
+    {
+        return mcrypt_create_iv(mcrypt_get_iv_size($cipher, $mode));
+    }
+
+    /**
+     * @param int $counter
+     *
+     * @return string
+     */
+    protected function getMessage($counter)
+    {
+        $messageData = [
+            'status' => 'ok',
+            'data'   => [
+                'counter' => $counter,
+            ],
+            'debug'  => [
+                'no' => 'debug :)',
+            ],
+        ];
+
+        return json_encode($messageData, JSON_PRETTY_PRINT);
+    }
 }

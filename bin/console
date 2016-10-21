@@ -1,5 +1,5 @@
+#!/usr/bin/env php
 <?php
-
 
 use Marble\Presentations\Security\Console\Application;
 
