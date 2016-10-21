@@ -3,6 +3,7 @@
 namespace Marble\Presentations\Security\Console;
 
 use Marble\Presentations\Security\Command\Mac\HMac;
+use Marble\Presentations\Security\Command\Mcrypt\Ecb;
 use Marble\Presentations\Security\Command\Mcrypt\ZeroPadding;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,5 +37,6 @@ class Application extends BaseApplication
     {
         $this->add(new HMac());
         $this->add(new ZeroPadding());
+        $this->add(new Ecb());
     }
 }

@@ -2,20 +2,14 @@
 
 namespace Marble\Presentations\Security\Command\Mcrypt;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ZeroPadding extends Command
+class ZeroPadding extends McryptCommandAbstract
 {
-    const OPTION_KEY = 'key';
-    const OPTION_MODE = 'mode';
-    const OPTION_CIPHER = 'cipher';
-    const ARGUMENT_MESSAGE = 'message';
-
     /**
      * @inheritdoc
      */
@@ -36,18 +30,19 @@ class ZeroPadding extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $cipher = $input->getOption(self::OPTION_CIPHER);
-        $mode   = $input->getOption(self::OPTION_MODE);
-        $key    = $input->getOption(self::OPTION_KEY);
-
-        $message = $input->getArgument(self::ARGUMENT_MESSAGE);
+        $cipher    = $input->getOption(self::OPTION_CIPHER);
+        $mode      = $input->getOption(self::OPTION_MODE);
+        $key       = $input->getOption(self::OPTION_KEY);
+        $message   = $input->getArgument(self::ARGUMENT_MESSAGE);
+        $blockSize = $this->getBlockSize($cipher, $mode);
+        $iv        = mcrypt_create_iv(mcrypt_get_iv_size($cipher, $mode));
 
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);
-        $io->writeln('Block size:        ' . mcrypt_get_block_size($cipher, $mode));
+        $io->writeln('Block size:        ' . $blockSize);
         $io->writeln('Plaintext length:  ' . strlen($message));
 
-        $cipherText = mcrypt_encrypt($cipher, $key, $message, $mode);
+        $cipherText = mcrypt_encrypt($cipher, $key, $message, $mode, $iv);
 
         $io->writeln('Cipher length:     ' . strlen($cipherText));
         $io->writeln('Cipher text:       ' . bin2hex($cipherText));
