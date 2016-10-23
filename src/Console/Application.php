@@ -10,6 +10,8 @@ use Marble\Presentations\Security\Command\Mcrypt\OfbRandomIv;
 use Marble\Presentations\Security\Command\Mcrypt\OfbReusedIv;
 use Marble\Presentations\Security\Command\Mcrypt\OfbStaticIv;
 use Marble\Presentations\Security\Command\Mcrypt\ZeroPadding;
+use Marble\Presentations\Security\Command\OpelSsl\Padding;
+use Marble\Presentations\Security\Command\OpelSsl\Rsa;
 use Marble\Presentations\Security\Command\Passwords\Bcrypt;
 use Marble\Presentations\Security\Command\Passwords\StringComparision;
 use Symfony\Component\Console\Application as BaseApplication;
@@ -52,5 +54,7 @@ class Application extends BaseApplication
         $this->add(new OfbReusedIv());
         $this->add(new Bcrypt());
         $this->add(new StringComparision());
+        $this->add(new Padding());
+        $this->add(new Rsa());
     }
 }
