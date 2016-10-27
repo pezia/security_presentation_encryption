@@ -20,7 +20,8 @@ class Ecb extends McryptCommandAbstract
             ->setName('mcrypt:ecb')
             ->addOption(self::OPTION_CIPHER, 'c', InputOption::VALUE_OPTIONAL, 'Block cipher used for encryption', MCRYPT_RIJNDAEL_256)
             ->addOption(self::OPTION_KEY, self::OPTION_KEY, InputOption::VALUE_OPTIONAL, 'The secret key', 'my too short Key')
-            ->setDescription('This example shows that with ECB mode you will get the same ciphertext block for the same plaintext block.');
+            ->setDescription('ECB mode usage')
+            ->setHelp('This example shows that with ECB mode you will get the same ciphertext block for the same plaintext block.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,6 +32,8 @@ class Ecb extends McryptCommandAbstract
         $key       = $input->getOption(self::OPTION_KEY);
         $mode      = MCRYPT_MODE_ECB;
         $blockSize = $this->getBlockSize($cipher, $mode);
+
+        $io->title('ECB Mode');
 
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);

@@ -20,7 +20,8 @@ class OfbRandomIv extends McryptCommandAbstract
             ->setName('mcrypt:ofb-random-iv')
             ->addOption(self::OPTION_CIPHER, 'c', InputOption::VALUE_OPTIONAL, 'Block cipher used for encryption', MCRYPT_RIJNDAEL_256)
             ->addOption(self::OPTION_KEY, self::OPTION_KEY, InputOption::VALUE_OPTIONAL, 'The secret key', 'my too short Key')
-            ->setDescription('This example shows that with OFB mode you will get different ciphertexts with different IVs due to the different key streams.');
+            ->setDescription('Proper OFB mode usage with random IVs')
+            ->setHelp('With OFB mode you will get different ciphertexts with different IVs due to the different key streams.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -32,6 +33,8 @@ class OfbRandomIv extends McryptCommandAbstract
         $mode      = MCRYPT_MODE_OFB;
         $blockSize = $this->getBlockSize($cipher, $mode);
         $message   = $this->getMessage(0);
+
+        $io->title('OFB Mode with Random IV');
 
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);

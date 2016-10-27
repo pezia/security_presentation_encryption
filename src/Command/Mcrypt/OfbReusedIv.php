@@ -20,7 +20,8 @@ class OfbReusedIv extends McryptCommandAbstract
             ->setName('mcrypt:ofb-reused-iv')
             ->addOption(self::OPTION_CIPHER, 'c', InputOption::VALUE_OPTIONAL, 'Block cipher used for encryption', MCRYPT_RIJNDAEL_256)
             ->addOption(self::OPTION_KEY, self::OPTION_KEY, InputOption::VALUE_OPTIONAL, 'The secret key', 'my too short Key')
-            ->setDescription('This example shows that with OFB mode you can get the difference of the plaintexts if you reuse the same IV with the same key.');
+            ->setDescription('Improper usage of OFB with repeating IVs')
+            ->setHelp('With OFB mode you can get the difference of the plaintexts if you reuse the same IV with the same key.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -33,6 +34,8 @@ class OfbReusedIv extends McryptCommandAbstract
         $blockSize = $this->getBlockSize($cipher, $mode);
         $message1  = 'This is the first message';
         $message2  = 'And this is the second';
+
+        $io->title('OFB Mode with Reused IV');
 
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);

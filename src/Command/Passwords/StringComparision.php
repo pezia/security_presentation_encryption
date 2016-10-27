@@ -20,7 +20,7 @@ class StringComparision extends Command
 
         $this
             ->setName('password:string-comparision')
-            ->setDescription('An example that shows how constant-time string comparision prevents timing attacks');
+            ->setDescription('Shows how constant-time string comparision prevents timing attacks');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,6 +31,8 @@ class StringComparision extends Command
 
         $stringA = openssl_random_pseudo_bytes(100 * 1024 * 1024); // 100 MiB
         $stringB = $stringA;
+
+        $io->title('String comparisions');
 
         $io->section('The two strings are the same');
 

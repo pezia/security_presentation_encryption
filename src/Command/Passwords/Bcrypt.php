@@ -27,7 +27,8 @@ class Bcrypt extends Command
             ->addArgument(self::ARGUMENT_PASSWORD, InputArgument::OPTIONAL, 'The password to hash', 'mySecretPassword')
             ->addOption(self::OPTION_MIN_COST, 'min', InputOption::VALUE_OPTIONAL, 'The minimum cost for timing tests', 10)
             ->addOption(self::OPTION_MAX_COST, 'max', InputOption::VALUE_OPTIONAL, 'The maximum cost for timing tests', 15)
-            ->setDescription('An example that shows how to use bcrypt with password functions and how cost changes the hashing time');
+            ->setDescription('Password hashing with BCrypt and password_* functions')
+            ->setHelp('An example that shows how to use BCrypt with the password functions and how cost changes the hashing time');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,6 +37,8 @@ class Bcrypt extends Command
 
         $password = $input->getArgument(self::ARGUMENT_PASSWORD);
         $algo     = PASSWORD_BCRYPT;
+
+        $io->title('Hashing with BCrypt');
 
         $io->section('Processing times');
 

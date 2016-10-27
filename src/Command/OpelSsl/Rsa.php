@@ -23,7 +23,7 @@ class Rsa extends Command
         $this
             ->setName('openssl:rsa')
             ->addArgument(self::ARGUMENT_MESSAGE, InputArgument::OPTIONAL, 'The message to encrypt', 'My secret message')
-            ->setDescription('An example that shows the padding scheme of the OpenSSL extension.');
+            ->setDescription('Public-key encryption and authentication with RSA.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,6 +34,8 @@ class Rsa extends Command
 
         $cryptCertFileName = __DIR__ . '/crypt.key';
         $signCertFileName  = __DIR__ . '/sign.key';
+
+        $io->title('Public-key encryption and authentication with RSA');
 
         $io->text('Plaintext length: ' . strlen($message));
 

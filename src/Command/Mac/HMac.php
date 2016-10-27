@@ -21,10 +21,11 @@ class HMac extends Command
         parent::configure();
 
         $this
-            ->setName('hmac')
+            ->setName('mac:hmac')
             ->addArgument(self::ARGUMENT_MESSAGE, InputArgument::OPTIONAL, 'The message of which the HMAC will be generated.', 'This is my message to authenticate')
             ->addArgument(self::ARGUMENT_KEY, InputArgument::OPTIONAL, 'The key used for HMAC.', 'Common Secret Key')
-            ->setDescription('An example that generates and then verifies an HMAC on the given message with the given key.');
+            ->setDescription('Authentication with HMAC')
+            ->setHelp('Generates and then verifies an HMAC on the given message with the given key.');
     }
 
     /**
@@ -44,6 +45,8 @@ class HMac extends Command
             $io->error('Missing hash algo. Make sure you run a decent PHP version!');
             return -1;
         }
+
+        $io->title('Message Authentication with HMAC');
 
         $io->section('Base data');
 

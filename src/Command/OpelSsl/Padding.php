@@ -27,7 +27,7 @@ class Padding extends Command
             ->addOption(self::OPTION_CIPHER, 'c', InputOption::VALUE_OPTIONAL, 'Block cipher used for encryption', 'aes-256-cbc')
             ->addOption(self::OPTION_KEY, self::OPTION_KEY, InputOption::VALUE_OPTIONAL, 'The secret key', 'my too short Key')
             ->addArgument(self::ARGUMENT_MESSAGE, InputArgument::OPTIONAL, 'The message to encrypt', 'Foo')
-            ->setDescription('An example that shows the padding scheme of the OpenSSL extension.');
+            ->setDescription('Default padding scheme of the OpenSSL extension (PKCS#7).');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,6 +39,8 @@ class Padding extends Command
         $message  = $input->getArgument(self::ARGUMENT_MESSAGE);
         $isSecure = false;
         $iv       = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher), $isSecure);
+
+        $io->title('OpenSSL PKCS#7 Padding');
 
         $io->writeln('IV is secure: ' . var_export($isSecure, true));
         $io->writeln('Plaintext length: ' . strlen($message));

@@ -37,6 +37,8 @@ class ZeroPadding extends McryptCommandAbstract
         $blockSize = $this->getBlockSize($cipher, $mode);
         $iv        = $this->generateIv($cipher, $mode);
 
+        $io->title('MCrypt Zero Padding');
+
         $io->writeln('Cipher:            ' . $cipher);
         $io->writeln('Mode:              ' . $mode);
         $io->writeln('Block size:        ' . $blockSize);
